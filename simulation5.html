@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulation 5: The Witness</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Inter',sans-serif;background:#0d1117;color:#e6edf3;min-height:100vh;display:flex;flex-direction:column}
+  .sim-header{background:#161b22;border-bottom:1px solid #30363d;padding:16px 24px;display:flex;justify-content:space-between;align-items:center}
+  .sim-title{font-size:14px;font-weight:600;color:#58a6ff}
+  .progress-bar{background:#21262d;border-radius:4px;height:6px;width:200px}
+  .progress-fill{background:#58a6ff;border-radius:4px;height:6px;transition:width 0.4s}
+  .progress-label{font-size:12px;color:#8b949e;margin-top:4px;text-align:right}
+  .scene{max-width:760px;margin:0 auto;padding:40px 24px;flex:1}
+  .scene-label{font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#58a6ff;margin-bottom:12px}
+  .scene-title{font-size:28px;font-weight:700;color:#e6edf3;margin-bottom:24px;line-height:1.3}
+  .narrative{background:#161b22;border-radius:10px;padding:28px;margin-bottom:28px;border:1px solid #30363d;line-height:1.75;font-size:15px;color:#cdd9e5}
+  .narrative p{margin-bottom:14px}
+  .narrative p:last-child{margin-bottom:0}
+  .email-block{background:#0d1117;border-radius:8px;padding:20px;border:1px solid #388bfd;margin:16px 0;font-family:monospace;font-size:13px;color:#79c0ff;line-height:1.7}
+  .email-header{color:#8b949e;margin-bottom:8px;font-size:12px}
+  .choices{margin-top:8px}
+  .choices h3{font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#8b949e;margin-bottom:16px}
+  .choice-btn{display:block;width:100%;text-align:left;background:#21262d;border:1px solid #30363d;border-radius:8px;padding:18px 22px;margin-bottom:12px;cursor:pointer;color:#cdd9e5;font-size:14px;line-height:1.6;transition:all 0.2s;font-family:'Inter',sans-serif}
+  .choice-btn:hover{background:#2d333b;border-color:#58a6ff;color:#e6edf3}
+  .choice-btn.selected{background:#1c2a3a;border-color:#58a6ff;color:#58a6ff}
+  .feedback{background:#161b22;border-radius:10px;padding:28px;margin:24px 0;border-left:4px solid #58a6ff;display:none}
+  .feedback.show{display:block}
+  .feedback h4{font-size:14px;font-weight:600;color:#58a6ff;margin-bottom:10px}
+  .feedback p{font-size:14px;color:#cdd9e5;line-height:1.7}
+  .next-btn{background:#238636;color:#fff;border:none;border-radius:8px;padding:14px 28px;font-size:14px;font-weight:600;cursor:pointer;display:none;margin-top:8px;font-family:'Inter',sans-serif;transition:background 0.2s}
+  .next-btn:hover{background:#2ea043}
+  .next-btn.show{display:inline-block}
+  .completion{text-align:center;padding:40px 24px}
+  .completion h2{font-size:32px;font-weight:700;color:#e6edf3;margin-bottom:16px}
+  .completion p{font-size:16px;color:#8b949e;margin-bottom:24px;line-height:1.7}
+  .code-display{background:#161b22;border:2px solid #238636;border-radius:12px;padding:28px;display:inline-block;margin:16px auto}
+  .code-display .code-label{font-size:12px;color:#8b949e;margin-bottom:8px;letter-spacing:2px;text-transform:uppercase}
+  .code-display .code-value{font-size:48px;font-weight:700;color:#3fb950;letter-spacing:8px;font-family:monospace}
+  .summary{background:#161b22;border-radius:10px;padding:24px;margin-top:32px;border:1px solid #30363d;text-align:left}
+  .summary h3{font-size:14px;font-weight:600;color:#58a6ff;margin-bottom:16px}
+  .summary-item{display:flex;gap:12px;margin-bottom:12px;font-size:14px;color:#cdd9e5;line-height:1.5}
+  .summary-item:last-child{margin-bottom:0}
+  .tag{background:#1c2a3a;color:#58a6ff;border-radius:4px;padding:2px 8px;font-size:11px;font-weight:600;flex-shrink:0}
+  .hidden{display:none}
+</style>
+</head>
+<body>
+<div class="sim-header">
+  <div class="sim-title">BUS 1010 · Simulation 5: The Witness</div>
+  <div>
+    <div class="progress-bar"><div class="progress-fill" id="progFill" style="width:0%"></div></div>
+    <div class="progress-label" id="progLabel">Decision 0 of 5</div>
+  </div>
+</div>
+
+<div id="simContent">
+  <!-- INTRO -->
+  <div id="scene0" class="scene">
+    <div class="scene-label">Your Situation</div>
+    <div class="scene-title">Three Months In</div>
+    <div class="narrative">
+      <p>You are <strong>Jordan Reyes</strong>, a junior analyst at Meridian Financial Partners, a mid-sized wealth management firm. You've been here three months. The job is everything you worked for in school — finally.</p>
+      <p>Your direct supervisor, Dana Marsh, has been tough but fair. Her boss — Senior Vice President Marcus Chen — barely knows your name. Two other senior analysts, Kevin Taft and Priya Sundaram, have been friendly and occasionally helpful.</p>
+      <p>It's 6:47 PM on a Tuesday. Almost everyone has gone home. You stayed late to finish a model. A new email arrives — a forwarded message, sent to you by mistake. The original was meant for Kevin, not Jordan.</p>
+      <p>You open it.</p>
+      <div class="email-block">
+        <div class="email-header">FROM: p.sundaram@meridianfp.com<br>TO: j.reyes@meridianfp.com [SENT IN ERROR — intended for k.taft]<br>SUBJECT: FWD: Atlas acquisition — before Thursday</div>
+        ---FWD---<br>
+        Kevin — saw you talked to the contact. If the Atlas deal closes Thursday like they're saying, our window is Tuesday/Wednesday. NDA doesn't cover us technically. Confirm you're in?<br><br>—P
+      </div>
+      <p>You stare at the screen. You know Atlas Analytics is a client. You know "window" and "NDA" and "acquisition" in the same sentence means something. You just don't know exactly what to do with the fact that you now know it.</p>
+    </div>
+    <div class="choices">
+      <h3>Your first instinct is:</h3>
+      <button class="choice-btn" onclick="choose(0,'A','You close the email and try to forget it. You\'re new. This isn\'t your business. You don\'t even know for sure what it means.')">A) Close the email and try to forget it. You're new. This isn't your business.</button>
+      <button class="choice-btn" onclick="choose(0,'B','You forward it to your supervisor Dana right now, with a note that you received it by mistake and it concerns you.')">B) Forward it to your supervisor Dana immediately, with a concern flag.</button>
+      <button class="choice-btn" onclick="choose(0,'C','You screenshot it, save a copy, and spend the next 20 minutes researching what Atlas Analytics\' acquisition would mean.')">C) Screenshot it, save it, and research what you've just read.</button>
+      <button class="choice-btn" onclick="choose(0,'D','You reply to Priya directly, tell her she sent it to the wrong person, and ask if she needs it deleted.')">D) Reply to Priya, tell her she sent it to the wrong person.</button>
+    </div>
+    <div class="feedback" id="fb0"></div>
+    <button class="next-btn" id="next0" onclick="nextScene(1)">Continue →</button>
+  </div>
+
+  <!-- SCENE 1 -->
+  <div id="scene1" class="scene hidden">
+    <div class="scene-label">Decision 2 of 5</div>
+    <div class="scene-title">The Next Morning</div>
+    <div class="narrative">
+      <p>Wednesday. Kevin and Priya are already at their desks when you arrive. They're talking quietly. When you walk in, they both look up at you — and there's a half-second of something in that look. Then they're back to normal.</p>
+      <p>Did Priya realize she sent that email to the wrong Jordan? Does Kevin know? You don't know.</p>
+      <p>By 10 AM, you've confirmed through public sources that Atlas Analytics is, in fact, in acquisition talks — but the deal hasn't been announced publicly. That's all you know.</p>
+      <p>Your supervisor Dana emails you to ask if you have a minute to go over your quarterly numbers later. Routine stuff. She doesn't mention the email.</p>
+    </div>
+    <div class="choices">
+      <h3>You decide to:</h3>
+      <button class="choice-btn" onclick="choose(1,'A','Say nothing to anyone. You have no proof of anything. You could be reading this completely wrong.')">A) Say nothing. You have no proof. You could be misreading this entirely.</button>
+      <button class="choice-btn" onclick="choose(1,'B','Bring it up with Dana during the quarterly meeting — mention you received a strange email by mistake and describe what it said.')">B) Bring it up with Dana during the meeting — describe what you received.</button>
+      <button class="choice-btn" onclick="choose(1,'C','Approach Priya directly and quietly ask her what the email was about — give her a chance to explain.')">C) Approach Priya directly. Ask her what the email was about.</button>
+      <button class="choice-btn" onclick="choose(1,'D','Look up the company\'s ethics hotline or compliance officer contact and call anonymously before doing anything else.')">D) Find the compliance/ethics hotline and make an anonymous report before doing anything else.</button>
+    </div>
+    <div class="feedback" id="fb1"></div>
+    <button class="next-btn" id="next1" onclick="nextScene(2)">Continue →</button>
+  </div>
+
+  <!-- SCENE 2 -->
+  <div id="scene2" class="scene hidden">
+    <div class="scene-label">Decision 3 of 5</div>
+    <div class="scene-title">Priya Finds You</div>
+    <div class="narrative">
+      <p>Late Wednesday afternoon, Priya appears at your desk. She glances around, then leans in.</p>
+      <p>"Hey — about that email. Wrong Jordan. I'm sure you figured that out. The content — it's complicated. There's context you don't have. It's not what it looks like."</p>
+      <p>She pauses. "I'd appreciate it if this stayed between us. We've been good to you here, Jordan. Kevin and I have gone to bat for you more than once in ways you don't even know about. This would really complicate things for people who've been in your corner."</p>
+      <p>She gives you a meaningful look. Then she walks away.</p>
+    </div>
+    <div class="choices">
+      <h3>How do you process what just happened?</h3>
+      <button class="choice-btn" onclick="choose(2,'A','You decide she\'s probably right — you don\'t have the full picture, and you\'ve been overthinking this. Let it go.')">A) She's probably right. You don't have the full context. Let it go.</button>
+      <button class="choice-btn" onclick="choose(2,'B','You feel manipulated. The "we\'ve been in your corner" comment reads like a veiled threat. Your concern increases.')">B) You feel manipulated. The veiled threat makes you more concerned, not less.</button>
+      <button class="choice-btn" onclick="choose(2,'C','You want to believe her but realize you need to find out definitively what that email meant before deciding anything.')">C) You want to trust her but realize you need more information before you can decide anything.</button>
+      <button class="choice-btn" onclick="choose(2,'D','You\'re scared. You need this job. You decide to stay quiet and hope this goes away on its own.')">D) You're scared. You need this job. You decide to stay quiet and hope it goes away.</button>
+    </div>
+    <div class="feedback" id="fb2"></div>
+    <button class="next-btn" id="next2" onclick="nextScene(3)">Continue →</button>
+  </div>
+
+  <!-- SCENE 3 -->
+  <div id="scene3" class="scene hidden">
+    <div class="scene-label">Decision 4 of 5</div>
+    <div class="scene-title">Thursday Morning</div>
+    <div class="narrative">
+      <p>Thursday. 9:15 AM. Atlas Analytics announces it has been acquired by a larger firm — Apex Capital Group — in a deal valued at $340 million. The announcement hits financial news immediately.</p>
+      <p>You watch Kevin and Priya from across the floor. They are very calm. Kevin is on a call. Priya is typing.</p>
+      <p>You don't know if they traded. You don't know if it would show up anywhere. You don't know what happens next.</p>
+      <p>But you know what you read on Tuesday night. And you know that Priya asked you to keep quiet.</p>
+      <p>Your phone buzzes. It's your college friend who works at the SEC as a junior examiner. She texted you about the Atlas deal: "big one today — our team is going to be busy." Pure coincidence. She doesn't know you know anything.</p>
+    </div>
+    <div class="choices">
+      <h3>With everything now visible, you decide:</h3>
+      <button class="choice-btn" onclick="choose(3,'A','Still do nothing. You have no proof they actually traded. It\'s not your job to be the compliance department.')">A) Still do nothing. You have no proof they actually traded. It's not your job.</button>
+      <button class="choice-btn" onclick="choose(3,'B','Report to your supervisor Dana today. The acquisition is now public — there\'s a clear before/after. This can\'t stay quiet.')">B) Report to Dana today. The acquisition is public now. This can't stay quiet.</button>
+      <button class="choice-btn" onclick="choose(3,'C','Go directly to the compliance officer or general counsel — above Dana, in case Dana is involved or compromised.')">C) Go directly to the compliance officer or general counsel — skip Dana in case she's involved.</button>
+      <button class="choice-btn" onclick="choose(3,'D','Call the SEC tip line anonymously. The email, the timing, the acquisition — it\'s enough to let them investigate properly.')">D) Call the SEC tip line anonymously. Let trained investigators handle this properly.</button>
+    </div>
+    <div class="feedback" id="fb3"></div>
+    <button class="next-btn" id="next3" onclick="nextScene(4)">Continue →</button>
+  </div>
+
+  <!-- SCENE 4 -->
+  <div id="scene4" class="scene hidden">
+    <div class="scene-label">Decision 5 of 5</div>
+    <div class="scene-title">Two Weeks Later</div>
+    <div class="narrative">
+      <p>An investigator from the firm's legal department calls you into a conference room. They've become aware that a misdirected email may have been sent to you on Tuesday of the Atlas acquisition week. They ask if you received anything unusual.</p>
+      <p>You are not a suspect. They're trying to build a picture of what happened. This is your moment: whatever you say here is now on record.</p>
+      <p>You haven't spoken to Priya since her warning. Kevin has been oddly friendly — stopping by your desk twice to make small talk, something he almost never did before.</p>
+    </div>
+    <div class="choices">
+      <h3>You tell the investigator:</h3>
+      <button class="choice-btn" onclick="choose(4,'A','That you don\'t recall receiving anything unusual. You delete a lot of misdirected email.')">A) You don't recall receiving anything unusual. You delete a lot of misdirected email.</button>
+      <button class="choice-btn" onclick="choose(4,'B','The full truth — you describe the email, Priya\'s visit, the timing, and everything you know. You provide the screenshot.')">B) The full truth. You describe everything — the email, Priya's visit, the timing, your concerns.</button>
+      <button class="choice-btn" onclick="choose(4,'C','That you received a misdirected email and deleted it without reading carefully — you\'d like to speak with an attorney before saying more.')">C) That you received a misdirected email and deleted it — and you'd like to speak with an attorney before continuing.</button>
+      <button class="choice-btn" onclick="choose(4,'D','You confirm you received the email, describe what it said, but say you couldn\'t be certain of its meaning and wanted to wait before acting.')">D) You confirm the email, describe what it said, and explain you weren't certain enough of its meaning to act immediately.</button>
+    </div>
+    <div class="feedback" id="fb4"></div>
+    <button class="next-btn" id="next4" onclick="showCompletion()">See Your Results →</button>
+  </div>
+</div>
+
+<!-- COMPLETION -->
+<div id="completion" class="hidden completion">
+  <div class="scene">
+    <div class="scene-label">Simulation Complete</div>
+    <h2>The Witness: Your Path</h2>
+    <p>You've worked through five of the hardest decisions in employee ethics: what to do when you know something you weren't supposed to know, and when staying silent feels like the safe choice.</p>
+    <div class="code-display">
+      <div class="code-label">Your Completion Code</div>
+      <div class="code-value" id="completionCode">------</div>
+    </div>
+    <p style="margin-top:16px;font-size:14px;color:#8b949e">Copy this code now. Include it in your Discussion 5 post for full credit.</p>
+    <div class="summary" id="summaryBlock"></div>
+  </div>
+</div>
+
+<script>
+const choices = {};
+const feedbacks = {
+  0: {
+    A: "Choosing to ignore a misdirected email is understandable — and very human. But Chapter 7.5 is clear: silence about wrongdoing has an ethical cost. The question isn't whether you know for certain; it's whether your duty to act begins before certainty arrives.",
+    B: "Forwarding to your supervisor immediately is the textbook internal reporting move — exactly what Chapter 7 recommends as a first step. You're not accusing anyone; you're raising a concern through proper channels.",
+    C: "Documenting before acting shows careful thinking. The instinct to preserve evidence is sound. But spending 20 minutes researching before telling anyone also means you're beginning to carry this alone — which has its own risks.",
+    D: "Notifying Priya that she sent the email to the wrong person is a courtesy — but it also tips off someone who may be engaged in misconduct that you've seen it. Think about who that choice actually helps."
+  },
+  1: {
+    A: "Waiting for certainty is a common rationalization. Chapter 7.5 on whistleblowing notes that employees often cite insufficient evidence as a reason not to report — even when what they have is more than enough to trigger a duty to escalate.",
+    B: "Bringing it to Dana in a routine meeting — not making it a crisis, but not burying it — is proportionate. You're keeping your supervisor informed and creating a record without making accusations you can't yet support.",
+    C: "Asking Priya directly gives her a chance to explain — but it also warns a potential bad actor that you know, before you've protected yourself by reporting to anyone. This is a high-risk move.",
+    D: "Going straight to compliance or an ethics hotline before even speaking to your supervisor is an aggressive first move — but an anonymous tip protects you and lets trained investigators decide what the information means."
+  },
+  2: {
+    A: "Accepting Priya's explanation without evidence is the rationalization Chapter 7 warns against: 'legal rationalization' — using the absence of proof to avoid a duty to investigate. The pressure she applied is itself a signal.",
+    B: "Recognizing social pressure as a manipulation tactic is a critical skill. The 'we've been in your corner' framing is designed to activate reciprocity bias — the feeling that you owe someone compliance because they've helped you.",
+    C: "Wanting more information before deciding is rational, but notice: the window to act before the acquisition closes is narrowing. Gathering information takes time you may not have.",
+    D: "Fear is real and your job security matters. But Chapter 7.5 asks a harder question: if you stay silent and it later emerges that you knew — what is the ethical cost of that choice? Fear is a motive, not a justification."
+  },
+  3: {
+    A: "After the public announcement, \"no proof they traded\" is no longer as strong a defense for staying quiet. You have the email. You have Priya's visit. You have the timing. The question is whether your duty to report requires proof of the crime — or awareness of the likely crime.",
+    B: "Reporting to Dana now is the appropriate first internal step. The acquisition is public — there's a clear factual record to attach your concern to. This is the internal reporting Chapter 7 recommends.",
+    C: "Going above Dana is appropriate if you have reason to believe she's involved or compromised, or if your company's structure suggests compliance should be the first point of contact. Knowing your org chart matters here.",
+    D: "The SEC tip line exists precisely for situations like this. Anonymous reporting to a regulator is a form of whistleblowing — it's protected under Sarbanes-Oxley and Dodd-Frank. It may be the most effective route to an actual investigation."
+  },
+  4: {
+    A: "Lying to an internal investigator is potentially a crime in itself — and it exposes you to personal liability if the investigation expands. This is the riskiest choice in the simulation: it transforms you from a witness into a participant in a cover-up.",
+    B: "Full disclosure — with documentation — is the most legally and ethically defensible position. Chapter 7.5 protects whistleblowers precisely so that employees feel they can do exactly this. It carries risk, but it is the clearest ethical path.",
+    C: "Asking to speak with an attorney before continuing is a legally sound move — investigators expect this in serious matters. It's not evasion; it's prudence. It buys you time to understand your rights before you commit to a full account.",
+    D: "Partial disclosure with an explanation of your reasoning is a reasonable middle ground — you're not lying, you're being honest about your uncertainty. Whether this satisfies investigators depends on what they already know."
+  }
+};
+
+function choose(scene, option, text) {
+  const btns = document.querySelectorAll(`#scene${scene} .choice-btn`);
+  btns.forEach(b => b.classList.remove('selected'));
+  event.target.classList.add('selected');
+  choices[scene] = {option, text};
+
+  const fb = document.getElementById(`fb${scene}`);
+  fb.innerHTML = `<h4>Reflection</h4><p>${feedbacks[scene][option]}</p>`;
+  fb.classList.add('show');
+  document.getElementById(`next${scene}`).classList.add('show');
+  updateProgress(scene + 1);
+}
+
+function nextScene(n) {
+  document.getElementById(`scene${n-1}`).classList.add('hidden');
+  document.getElementById(`scene${n}`).classList.remove('hidden');
+  window.scrollTo(0,0);
+}
+
+function updateProgress(n) {
+  const pct = (n/5)*100;
+  document.getElementById('progFill').style.width = pct+'%';
+  document.getElementById('progLabel').textContent = `Decision ${n} of 5`;
+}
+
+function generateCode() {
+  const keys = Object.values(choices).map(c=>c.option).join('');
+  const base = keys.split('').reduce((a,c)=>a+c.charCodeAt(0),0);
+  const seed = (base * 7 + 1337) % 900000 + 100000;
+  return String(seed);
+}
+
+function showCompletion() {
+  document.getElementById('scene4').classList.add('hidden');
+  const comp = document.getElementById('completion');
+  comp.classList.remove('hidden');
+
+  const code = generateCode();
+  document.getElementById('completionCode').textContent = code;
+
+  const labels = ['Initial reaction','Wednesday morning','Priya\'s warning','After announcement','Investigator meeting'];
+  let html = '<h3>Your Decision Summary</h3>';
+  Object.keys(choices).forEach((k,i)=>{
+    html += `<div class="summary-item"><span class="tag">${labels[i]}</span> <span>Option ${choices[k].option}: ${choices[k].text.substring(0,80)}...</span></div>`;
+  });
+  document.getElementById('summaryBlock').innerHTML = html;
+  window.scrollTo(0,0);
+  updateProgress(5);
+}
+</script>
+</body>
+</html>
