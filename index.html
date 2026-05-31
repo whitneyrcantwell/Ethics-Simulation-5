@@ -327,9 +327,8 @@ function choose(scene, option, text) {
   choices[scene] = {option, text};
   scores[scene]  = scoring[scene][option];
 
-  const pts = scores[scene];
   const fb  = document.getElementById(`fb${scene}`);
-  fb.innerHTML = `<h4>Reflection <span class="pts-badge">+${pts} pt${pts!==1?'s':''}</span></h4><p>${feedbacks[scene][option]}</p>`;
+  fb.innerHTML = `<h4>Reflection</h4><p>${feedbacks[scene][option]}</p>`;
   fb.classList.add('show');
   document.getElementById(`next${scene}`).classList.add('show');
   updateProgress(scene + 1);
