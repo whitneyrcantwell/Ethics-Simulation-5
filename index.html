@@ -226,7 +226,7 @@
       </div>
       <div class="score-card">
         <div class="sc-label">Out of</div>
-        <div class="sc-value" style="color:#8b949e">15</div>
+        <div class="sc-value" style="color:#8b949e">75</div>
       </div>
     </div>
 
@@ -249,11 +249,11 @@ const choices = {};
 const scores = {};
 
 const scoring = {
-  0: {A:0, B:3, C:2, D:1},
-  1: {A:0, B:3, C:1, D:2},
-  2: {A:0, B:3, C:2, D:0},
-  3: {A:0, B:3, C:2, D:2},
-  4: {A:0, B:3, C:2, D:1}
+  0: {A:0,  B:15, C:10, D:5},
+  1: {A:0,  B:15, C:5,  D:10},
+  2: {A:0,  B:15, C:10, D:0},
+  3: {A:0,  B:15, C:10, D:10},
+  4: {A:0,  B:15, C:10, D:5}
 };
 
 const feedbacks = {
@@ -304,10 +304,10 @@ function getTotalScore() {
 }
 
 function getGrade(score) {
-  if (score >= 13) return 'A';
-  if (score >= 10) return 'B';
-  if (score >= 7)  return 'C';
-  if (score >= 4)  return 'D';
+  if (score >= 65) return 'A';
+  if (score >= 50) return 'B';
+  if (score >= 35) return 'C';
+  if (score >= 20) return 'D';
   return 'F';
 }
 
@@ -367,11 +367,8 @@ function showCompletion() {
   // Summary
   let html = '<h3>Your Decision Summary</h3>';
   Object.keys(choices).forEach((k, i) => {
-    const pts   = scores[k];
-    const cls   = 'pts-tag pts-' + pts;
     html += `<div class="summary-item">
       <span class="tag">${decisionLabels[i]}</span>
-      <span class="${cls}">${pts}/3</span>
       <span><strong>Option ${choices[k].option}:</strong> ${choices[k].text}</span>
     </div>`;
   });
@@ -433,7 +430,7 @@ function downloadPDF() {
   doc.setFont('helvetica','bold');
   doc.setFontSize(14);
   doc.setTextColor(...green);
-  doc.text(`${total} / 15  (${grade})`, 158, y);
+  doc.text(`${total} / 75  (${grade})`, 158, y);
 
   // Completion code box
   y += 14;
@@ -464,14 +461,14 @@ function downloadPDF() {
   doc.text('Decision Summary', 14, y);
   y += 6;
 
-  const gradeColors = {3:[63,185,80], 2:[88,166,255], 1:[227,179,65], 0:[248,81,73]};
+  const gradeColors = {15:[63,185,80], 10:[88,166,255], 5:[227,179,65], 0:[248,81,73]};
 
   const tableRows = Object.keys(choices).map((k, i) => {
     const pts = scores[k];
     return [
       decisionLabels[i],
       choices[k].option,
-      `${pts} / 3`,
+      `${pts} / 15`,
       feedbacks[k][choices[k].option].substring(0, 160) + (feedbacks[k][choices[k].option].length > 160 ? '…' : '')
     ];
   });
